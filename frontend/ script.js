@@ -1,25 +1,13 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const predictButton = document.getElementById('predictButton');
-    const emailInput = document.getElementById('emailInput');
-    const resultElement = document.getElementById('result');
+// frontend/script.js
 
-    predictButton.addEventListener('click', async () => {
-        const emailText = emailInput.value.trim();
-        if (emailText) {
-            try {
-                const response = await fetch('/predict', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email: emailText }),
-                });
-                const data = await response.json();
-                resultElement.textContent = `Prediction: ${data.prediction}`;
-            } catch (error) {
-                console.error(error);
-                resultElement.textContent = 'Error occurred. Please try again.';
-            }
-        } else {
-            resultElement.textContent = 'Please enter an email text.';
-        }
+document.getElementById('spam-form').addEventListener('submit', async (event) => {
+    event.preventDefault(); // Prevent default form submission
+    const emailText = document.querySelector('textarea[name="email"]').value;
+    const response = await fetch('/predict', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: emailText }),
     });
+    const result = await response.json();
+    document.getElementById('result').innerHTML = `The email is ${result.prediction}.`;
 });
